@@ -2,158 +2,151 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Marcador Pedro Escartín 33x11 ULTRA</title>
+    <title>Marcador Escartín - Hypermotion Pro</title>
     <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
         /* --- BASE --- */
         body {
-            margin: 0;
-            padding: 0;
-            background-color: #000000;
-            color: white;
+            margin: 0; padding: 0;
+            background-color: #000; color: white;
             font-family: 'Teko', sans-serif;
-            overflow: hidden;
-            user-select: none;
+            overflow: hidden; user-select: none;
+            transform: translateZ(0);
+            backface-visibility: visible;
         }
 
         #contenedor-principal {
-            width: 100vw;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: center;
-            background: black;
+            width: 100vw; height: 100vh;
+            display: flex; flex-direction: column;
+            justify-content: flex-start; align-items: center;
+            background: radial-gradient(circle at center, #111 0%, #000 100%);
+            animation: keepAlive 2s infinite;
         }
 
-        /* --- CRONÓMETRO (PROPORCIÓN 33x11) --- */
+        @keyframes keepAlive {
+            0% { filter: brightness(100%); }
+            50% { filter: brightness(100.2%); }
+            100% { filter: brightness(100%); }
+        }
+
+        /* --- CRONÓMETRO (LÍNEA MÁS GRUESA Y BRILLANTE) --- */
         .header-tiempo {
-            width: 100%;
-            background: linear-gradient(180deg, #0a0a0a 0%, #000 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-bottom: 8px solid #4b0082; /* Línea más gruesa para marcar el ancho */
-            height: 40vh; /* Ajustado para que el resto respire mejor */
+            width: 100%; height: 38vh;
+            background: linear-gradient(180deg, #0f0f0f 0%, #000 100%);
+            display: flex; justify-content: center; align-items: center;
+            /* Línea morada más gorda */
+            border-bottom: 12px solid #4b0082;
+            /* Resplandor de la línea para que destaque más */
+            box-shadow: 0 10px 30px rgba(75, 0, 130, 0.7);
+            z-index: 10;
         }
 
         .cronometro {
-            font-size: 28rem; /* ¡Más grande para aprovechar el ancho! */
-            color: #ffcc00;
-            line-height: 0.9;
-            font-weight: 700;
-            letter-spacing: 15px; /* Espaciado premium de estadio */
-            text-shadow: 0 0 40px rgba(255, 204, 0, 0.3);
+            font-size: 26rem; color: #ffcc00;
+            line-height: 0.9; font-weight: 700;
+            letter-spacing: 10px;
+            -webkit-text-stroke: 1px #ffcc00;
+            text-shadow: 0 0 30px rgba(255, 204, 0, 0.5);
             font-variant-numeric: tabular-nums;
         }
 
-        /* --- CUERPO CENTRAL (MÁXIMA VISIBILIDAD) --- */
+        /* --- CUERPO --- */
         .cuerpo-marcador {
-            display: flex;
-            width: 100%;
-            height: 60vh;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 60px; /* Más padding lateral para el formato 33 bloques */
-            box-sizing: border-box;
+            display: flex; width: 100%; height: 62vh;
+            align-items: center; justify-content: space-between;
+            padding: 0 80px; box-sizing: border-box;
         }
 
         .bloque-equipo {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 32%;
+            display: flex; flex-direction: column;
+            align-items: center; 
+            flex: 1; /* Distribución equitativa */
         }
 
         .nombre-equipo {
-            font-size: 13rem; /* ¡SUBIDO A 13rem! Monumental */
-            font-weight: 700;
-            text-transform: uppercase;
-            line-height: 0.75;
-            text-align: center;
-            color: #fff;
-            margin-bottom: 5px;
-            letter-spacing: 2px;
-            white-space: nowrap;
+            font-size: 11rem; font-weight: 700;
+            text-transform: uppercase; line-height: 0.8;
+            background: linear-gradient(90deg, #fff 0%, #fff 45%, #aaa 50%, #fff 55%, #fff 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 8s linear infinite;
+        }
+
+        @keyframes shine {
+            to { background-position: 200% center; }
         }
 
         .logo {
-            height: 200px; /* Un poco más grande ahora que hay más espacio */
-            width: 200px;
+            height: 220px; width: 220px; /* Tamaño aumentado para equilibrio */
             object-fit: contain;
-            filter: drop-shadow(0 0 10px rgba(255,255,255,0.1));
+            filter: drop-shadow(0 0 20px rgba(255,255,255,0.15));
+            margin-top: 15px;
         }
 
-        /* --- GOLES (CENTRO ABSOLUTO) --- */
+        /* --- GOLES (SISTEMA PARA CIFRAS DOBLES) --- */
         .goles-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 36%;
+            display: flex; align-items: center;
+            justify-content: center; 
+            flex: 1.5; /* Más espacio para los números */
         }
 
         .goles-numero {
-            font-size: 42rem; /* ¡SUBIDO A 42rem! No se escapa ni un detalle */
-            font-weight: 700;
+            font-size: 40rem; font-weight: 700;
             line-height: 0.7;
-            text-shadow: 0 0 40px rgba(255,255,255,0.2);
-            min-width: 0.7em; /* Estabilidad total si llegas a 10 goles */
+            text-shadow: 0 0 40px rgba(255,255,255,0.3);
+            /* Ancho mínimo fijo para que no salte al pasar de 9 a 10 */
+            min-width: 1.1em; 
             text-align: center;
             font-variant-numeric: tabular-nums;
         }
 
-        .separador {
-            font-size: 15rem;
-            color: #4b0082;
-            margin: 0 15px;
-            opacity: 0.8;
+        .score-up { animation: scorePop 0.5s ease-out; }
+
+        @keyframes scorePop {
+            0% { transform: scale(1); filter: brightness(1); }
+            50% { transform: scale(1.15); filter: brightness(2.5); }
+            100% { transform: scale(1); filter: brightness(1); }
         }
 
-        /* --- PANEL DE CONTROL --- */
+        .separador {
+            font-size: 12rem; color: #4b0082;
+            margin: 0 10px; opacity: 0.9;
+            text-shadow: 0 0 25px #4b0082;
+        }
+
+        /* --- CONTROLES --- */
         #controles {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            background: rgba(0, 0, 0, 0.98);
-            display: flex;
-            justify-content: center;
-            padding: 15px;
-            opacity: 0;
-            transition: opacity 0.3s;
+            position: absolute; bottom: 0; width: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex; justify-content: center;
+            padding: 15px; opacity: 0; transition: opacity 0.3s;
             z-index: 999;
         }
-
         #contenedor-principal:hover #controles { opacity: 1; }
 
         button {
-            background: #1a1a1a;
-            color: #fff;
-            border: 2px solid #333;
-            padding: 10px 20px;
-            margin: 0 5px;
-            cursor: pointer;
-            font-family: 'Teko', sans-serif;
-            font-size: 20px;
-            text-transform: uppercase;
-            font-weight: 600;
+            background: #1a1a1a; color: #fff;
+            border: 1px solid #333; padding: 8px 15px;
+            margin: 0 4px; cursor: pointer;
+            font-family: 'Teko'; font-size: 18px;
+            text-transform: uppercase; font-weight: 600;
         }
-        button:hover { background: #4b0082; border-color: #d8baff; }
+        button:hover { background: #4b0082; color: #ffcc00; }
     </style>
 </head>
 <body>
 
 <div id="contenedor-principal">
-    
     <div class="header-tiempo">
         <div class="cronometro" id="timer">00:00</div>
     </div>
 
     <div class="cuerpo-marcador">
-        
         <div class="bloque-equipo">
-            <div class="nombre-equipo" style="color: #d8baff;">GUADALAJARA</div>
-            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/9/96/CD_Guadalajara_Logo.png/180px-CD_Guadalajara_Logo.png" alt="L" class="logo">
+            <div class="nombre-equipo">GUADALAJARA</div>
+            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/9/96/CD_Guadalajara_Logo.png/180px-CD_Guadalajara_Logo.png" class="logo">
         </div>
 
         <div class="goles-container">
@@ -164,22 +157,20 @@
 
         <div class="bloque-equipo">
             <div class="nombre-equipo">ZARAGOZA</div>
-            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/f/f6/Real_Zaragoza_logo.svg/180px-Real_Zaragoza_logo.svg.png" alt="V" class="logo">
+            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/f/f6/Real_Zaragoza_logo.svg/180px-Real_Zaragoza_logo.svg.png" class="logo">
         </div>
-
     </div>
 
     <div id="controles">
-        <button onclick="goal('local', 1)">LOCAL GOL +</button>
+        <button onclick="goal('local', 1)">L +1</button>
         <button onclick="goal('local', -1)">-</button>
-        <button onclick="startTimer()" style="color:#4eff4e">▶ INICIAR</button>
-        <button onclick="pauseTimer()" style="color:#ff4e4e">⏸ PAUSA</button>
+        <button onclick="startTimer()" style="color:#4eff4e">INICIAR</button>
+        <button onclick="pauseTimer()" style="color:#ff4e4e">PAUSA</button>
         <button onclick="resetTimer()">RESET</button>
         <button onclick="setHalfTime()">45:00</button>
         <button onclick="goal('visitante', -1)">-</button>
-        <button onclick="goal('visitante', 1)">VISIT. GOL +</button>
+        <button onclick="goal('visitante', 1)">V +1</button>
     </div>
-
 </div>
 
 <script>
@@ -229,12 +220,16 @@
     }
 
     function goal(team, amount) {
+        const el = team === 'local' ? displayL : displayV;
         if (team === 'local') {
-            scoreL += amount;
-            if (scoreL < 0) scoreL = 0;
+            scoreL = Math.max(0, scoreL + amount);
         } else {
-            scoreV += amount;
-            if (scoreV < 0) scoreV = 0;
+            scoreV = Math.max(0, scoreV + amount);
+        }
+        if (amount > 0) {
+            el.classList.remove('score-up');
+            void el.offsetWidth;
+            el.classList.add('score-up');
         }
         updateScores();
     }
