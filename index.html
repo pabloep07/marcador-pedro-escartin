@@ -19,6 +19,7 @@
             width: 100vw; height: 100vh;
             display: flex; flex-direction: column;
             background: #000;
+            position: relative; /* Necesario para posicionar controles */
         }
 
         /* --- HEADER: CRONÓMETRO Y DESCUENTO --- */
@@ -28,54 +29,53 @@
             display: flex; justify-content: center; align-items: center;
             border-bottom: 18px solid #7346b3; 
             position: relative;
-            gap: 20px; /* Espacio entre cronómetro y descuento */
+            gap: 20px;
         }
 
-        /* CORRECCIÓN DE ERROR: Se eliminó text-stroke para evitar líneas blancas raras.
-           Se usa text-shadow para dar profundidad sin bugs gráficos. */
         .cronometro {
             font-size: 26rem; 
             color: #ffcc33; 
             line-height: 0.9; font-weight: 700;
             letter-spacing: 10px;
-            font-variant-numeric: tabular-nums; /* Evita que los números bailen de lado */
+            font-variant-numeric: tabular-nums;
             text-shadow: 2px 2px 0px rgba(255,255,255,0.2); 
             transition: color 0.3s;
         }
 
-        /* Estilo para el tiempo de descuento (+1, +2...) */
         .tiempo-extra {
-            font-size: 12rem; /* Más pequeño que el crono principal */
-            color: #ff3333; /* Rojo brillante para destacar */
+            font-size: 12rem;
+            color: #ff3333;
             font-weight: 700;
-            margin-top: 30px; /* Ligero ajuste vertical */
-            opacity: 0; /* Invisible por defecto hasta que se active */
+            margin-top: 30px;
+            opacity: 0;
             transition: opacity 0.5s ease;
         }
 
         /* --- ANIMACIÓN DE SALTO (POP) --- */
-        /* Esta clase se añade con JS y se quita al terminar la animación */
         @keyframes pop {
             0% { transform: scale(1); }
-            50% { transform: scale(1.15); } /* Aumenta un 15% */
+            50% { transform: scale(1.15); }
             100% { transform: scale(1); }
         }
 
         .animar-texto {
             animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: inline-block; /* Necesario para que transform funcione */
+            display: inline-block;
         }
 
         /* --- CUERPO: EQUIPOS Y MARCADOR --- */
         .cuerpo-marcador {
             display: flex; width: 100%; height: 62vh;
             align-items: center; justify-content: space-between;
-            padding: 0 80px; box-sizing: border-box;
+            padding: 0 50px; 
+            box-sizing: border-box;
         }
 
         .bloque-equipo {
             display: flex; flex-direction: column;
             align-items: center; flex: 1;
+            /* Asegura que el contenido esté centrado verticalmente */
+            justify-content: center; 
         }
 
         .nombre-equipo {
@@ -85,19 +85,27 @@
             background: linear-gradient(180deg, #fff 40%, #bbb 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            
+            /* --- CAMBIO AQUÍ: Aumentado de 15px a 40px para más separación --- */
+            margin-top: 40px; 
+            margin-bottom: 0;
         }
 
         .logo {
-            height: 230px; width: 230px;
+            /* Mismos tamaños, sin cambios */
+            height: 42vh; 
+            width: auto; 
             object-fit: contain;
-            margin-top: 15px;
             filter: brightness(1.1);
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.1));
         }
 
         /* --- GOLES --- */
         .goles-container {
             display: flex; align-items: center;
             justify-content: center; flex: 1.5;
+            /* Ajuste para asegurar que los números queden alineados con el centro visual */
+            margin-top: -10px; 
         }
 
         .goles-numero {
@@ -106,7 +114,6 @@
             min-width: 1.1em; text-align: center;
             font-variant-numeric: tabular-nums;
             color: #fff;
-            /* Aseguramos que la animación se vea suave */
             will-change: transform;
         }
 
@@ -116,16 +123,26 @@
             margin: 0 15px; font-weight: 700;
         }
 
-        /* --- CONTROLES (OCULTOS HASTA HACER HOVER) --- */
+        /* --- CONTROLES (OCULTOS HASTA HACER HOVER EN LA ZONA) --- */
         #controles {
-            position: absolute; bottom: 0; width: 100%;
-            background: rgba(0,0,0,0.9); display: flex;
-            flex-wrap: wrap; /* Para que bajen de línea si hay muchos botones */
-            justify-content: center; align-items: center; padding: 10px;
-            opacity: 0; transition: opacity 0.3s;
+            position: absolute; bottom: 0; left: 0; width: 100%;
+            background: rgba(0,0,0,0.95); 
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center; align-items: center; 
+            padding: 15px 10px; 
             z-index: 999;
+            
+            /* VISIBILIDAD */
+            opacity: 0; 
+            transition: opacity 0.2s ease-in-out;
+            border-top: 2px solid #5c388d;
         }
-        #contenedor-principal:hover #controles { opacity: 1; }
+
+        /* SOLO se muestra si pasas el ratón SOBRE #controles */
+        #controles:hover { 
+            opacity: 1; 
+        }
         
         button {
             background: #5c388d; color: #fff; border: 1px solid #7346b3;
@@ -153,8 +170,8 @@
 
     <div class="cuerpo-marcador">
         <div class="bloque-equipo">
-            <div class="nombre-equipo">GUADALAJARA</div>
             <img src="./ESCUDO_OFICIAL_DEPORTIVO_GUADALAJARA.png" class="logo">
+            <div class="nombre-equipo">GUADALAJARA</div>
         </div>
 
         <div class="goles-container">
@@ -164,8 +181,8 @@
         </div>
 
         <div class="bloque-equipo">
-            <div class="nombre-equipo">ZARAGOZA</div>
             <img src="./zaragoza escudo.png" class="logo">
+            <div class="nombre-equipo">ZARAGOZA</div>
         </div>
     </div>
 
@@ -229,11 +246,8 @@
 
     // Función genérica para animar un elemento (Efecto Salto)
     function triggerAnimation(element) {
-        // Quitamos la clase por si ya la tiene para reiniciar la animación
         element.classList.remove('animar-texto');
-        // Forzamos un 'reflow' para que el navegador se de cuenta del cambio
         void element.offsetWidth; 
-        // Añadimos la clase que tiene el keyframe
         element.classList.add('animar-texto');
     }
 
@@ -246,7 +260,7 @@
                 totalSeconds++;
                 displayTimer.innerText = formatTime(totalSeconds);
 
-                // ANIMACIÓN AL MINUTO 45:00 (2700 seg) Y 90:00 (5400 seg)
+                // ANIMACIÓN AL MINUTO 45:00 Y 90:00
                 if (totalSeconds === 2700 || totalSeconds === 5400) {
                     triggerAnimation(displayTimer);
                 }
@@ -265,11 +279,10 @@
         totalSeconds = 0;
         displayTimer.innerText = "00:00";
         scoreL = 0; scoreV = 0;
-        clearExtra(); // Borrar tiempo extra al resetear
-        updateScores(false); // False para no animar al resetear
+        clearExtra(); 
+        updateScores(false); 
     }
 
-    // Función extra para pruebas: pone el reloj donde quieras
     function setSpecificTime(min, sec) {
         pauseTimer();
         totalSeconds = (min * 60) + sec;
@@ -282,16 +295,11 @@
         if (team === 'local') {
             let prev = scoreL;
             scoreL = Math.max(0, scoreL + amount);
-            // Solo animamos si el número cambió
-            if (prev !== scoreL) {
-                updateScores(true, 'local');
-            }
+            if (prev !== scoreL) updateScores(true, 'local');
         } else {
             let prev = scoreV;
             scoreV = Math.max(0, scoreV + amount);
-            if (prev !== scoreV) {
-                updateScores(true, 'visitante');
-            }
+            if (prev !== scoreV) updateScores(true, 'visitante');
         }
     }
 
@@ -316,14 +324,12 @@
         }
     }
 
-    // Botones directos (+1, +2...)
     function setExtra(min) {
         extraMinutes = min;
         updateExtraDisplay();
-        triggerAnimation(displayExtra); // Animación al poner descuento
+        triggerAnimation(displayExtra);
     }
 
-    // Botones incrementales (flechitas)
     function modExtra(amount) {
         extraMinutes = Math.max(0, extraMinutes + amount);
         updateExtraDisplay();
@@ -338,4 +344,3 @@
 
 </body>
 </html>
-
