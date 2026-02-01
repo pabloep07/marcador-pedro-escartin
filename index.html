@@ -2,56 +2,71 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Marcador Escartín - Hypermotion Pro</title>
-    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>Marcador Escartín - Dépor Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* --- BASE --- */
+        /* --- ESTILOS GENERALES --- */
         body {
             margin: 0; padding: 0;
-            background-color: #000; color: white;
+            background-color: #000; color: #fff;
             font-family: 'Teko', sans-serif;
-            overflow: hidden; user-select: none;
-            transform: translateZ(0);
-            backface-visibility: visible;
+            overflow: hidden; /* Evita barras de desplazamiento */
+            user-select: none; /* Evita que se seleccione el texto al hacer click */
         }
 
         #contenedor-principal {
             width: 100vw; height: 100vh;
             display: flex; flex-direction: column;
-            justify-content: flex-start; align-items: center;
-            background: radial-gradient(circle at center, #111 0%, #000 100%);
-            animation: keepAlive 2s infinite;
+            background: #000;
         }
 
-        @keyframes keepAlive {
-            0% { filter: brightness(100%); }
-            50% { filter: brightness(100.2%); }
-            100% { filter: brightness(100%); }
-        }
-
-        /* --- CRONÓMETRO (LÍNEA MÁS GRUESA Y BRILLANTE) --- */
+        /* --- HEADER: CRONÓMETRO Y DESCUENTO --- */
         .header-tiempo {
             width: 100%; height: 38vh;
-            background: linear-gradient(180deg, #0f0f0f 0%, #000 100%);
+            background: #0a0a0a;
             display: flex; justify-content: center; align-items: center;
-            /* Línea morada más gorda */
-            border-bottom: 12px solid #4b0082;
-            /* Resplandor de la línea para que destaque más */
-            box-shadow: 0 10px 30px rgba(75, 0, 130, 0.7);
-            z-index: 10;
+            border-bottom: 18px solid #7346b3; 
+            position: relative;
+            gap: 20px; /* Espacio entre cronómetro y descuento */
         }
 
+        /* CORRECCIÓN DE ERROR: Se eliminó text-stroke para evitar líneas blancas raras.
+           Se usa text-shadow para dar profundidad sin bugs gráficos. */
         .cronometro {
-            font-size: 26rem; color: #ffcc00;
+            font-size: 26rem; 
+            color: #ffcc33; 
             line-height: 0.9; font-weight: 700;
             letter-spacing: 10px;
-            -webkit-text-stroke: 1px #ffcc00;
-            text-shadow: 0 0 30px rgba(255, 204, 0, 0.5);
-            font-variant-numeric: tabular-nums;
+            font-variant-numeric: tabular-nums; /* Evita que los números bailen de lado */
+            text-shadow: 2px 2px 0px rgba(255,255,255,0.2); 
+            transition: color 0.3s;
         }
 
-        /* --- CUERPO --- */
+        /* Estilo para el tiempo de descuento (+1, +2...) */
+        .tiempo-extra {
+            font-size: 12rem; /* Más pequeño que el crono principal */
+            color: #ff3333; /* Rojo brillante para destacar */
+            font-weight: 700;
+            margin-top: 30px; /* Ligero ajuste vertical */
+            opacity: 0; /* Invisible por defecto hasta que se active */
+            transition: opacity 0.5s ease;
+        }
+
+        /* --- ANIMACIÓN DE SALTO (POP) --- */
+        /* Esta clase se añade con JS y se quita al terminar la animación */
+        @keyframes pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); } /* Aumenta un 15% */
+            100% { transform: scale(1); }
+        }
+
+        .animar-texto {
+            animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: inline-block; /* Necesario para que transform funcione */
+        }
+
+        /* --- CUERPO: EQUIPOS Y MARCADOR --- */
         .cuerpo-marcador {
             display: flex; width: 100%; height: 62vh;
             align-items: center; justify-content: space-between;
@@ -60,80 +75,72 @@
 
         .bloque-equipo {
             display: flex; flex-direction: column;
-            align-items: center; 
-            flex: 1; /* Distribución equitativa */
+            align-items: center; flex: 1;
         }
 
         .nombre-equipo {
             font-size: 11rem; font-weight: 700;
             text-transform: uppercase; line-height: 0.8;
-            background: linear-gradient(90deg, #fff 0%, #fff 45%, #aaa 50%, #fff 55%, #fff 100%);
-            background-size: 200% auto;
+            color: #ffffff;
+            background: linear-gradient(180deg, #fff 40%, #bbb 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: shine 8s linear infinite;
-        }
-
-        @keyframes shine {
-            to { background-position: 200% center; }
         }
 
         .logo {
-            height: 220px; width: 220px; /* Tamaño aumentado para equilibrio */
+            height: 230px; width: 230px;
             object-fit: contain;
-            filter: drop-shadow(0 0 20px rgba(255,255,255,0.15));
             margin-top: 15px;
+            filter: brightness(1.1);
         }
 
-        /* --- GOLES (SISTEMA PARA CIFRAS DOBLES) --- */
+        /* --- GOLES --- */
         .goles-container {
             display: flex; align-items: center;
-            justify-content: center; 
-            flex: 1.5; /* Más espacio para los números */
+            justify-content: center; flex: 1.5;
         }
 
         .goles-numero {
             font-size: 40rem; font-weight: 700;
             line-height: 0.7;
-            text-shadow: 0 0 40px rgba(255,255,255,0.3);
-            /* Ancho mínimo fijo para que no salte al pasar de 9 a 10 */
-            min-width: 1.1em; 
-            text-align: center;
+            min-width: 1.1em; text-align: center;
             font-variant-numeric: tabular-nums;
-        }
-
-        .score-up { animation: scorePop 0.5s ease-out; }
-
-        @keyframes scorePop {
-            0% { transform: scale(1); filter: brightness(1); }
-            50% { transform: scale(1.15); filter: brightness(2.5); }
-            100% { transform: scale(1); filter: brightness(1); }
+            color: #fff;
+            /* Aseguramos que la animación se vea suave */
+            will-change: transform;
         }
 
         .separador {
-            font-size: 12rem; color: #4b0082;
-            margin: 0 10px; opacity: 0.9;
-            text-shadow: 0 0 25px #4b0082;
+            font-size: 12rem; 
+            color: #8c52ff;
+            margin: 0 15px; font-weight: 700;
         }
 
-        /* --- CONTROLES --- */
+        /* --- CONTROLES (OCULTOS HASTA HACER HOVER) --- */
         #controles {
             position: absolute; bottom: 0; width: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            display: flex; justify-content: center;
-            padding: 15px; opacity: 0; transition: opacity 0.3s;
+            background: rgba(0,0,0,0.9); display: flex;
+            flex-wrap: wrap; /* Para que bajen de línea si hay muchos botones */
+            justify-content: center; align-items: center; padding: 10px;
+            opacity: 0; transition: opacity 0.3s;
             z-index: 999;
         }
         #contenedor-principal:hover #controles { opacity: 1; }
-
+        
         button {
-            background: #1a1a1a; color: #fff;
-            border: 1px solid #333; padding: 8px 15px;
-            margin: 0 4px; cursor: pointer;
-            font-family: 'Teko'; font-size: 18px;
-            text-transform: uppercase; font-weight: 600;
+            background: #5c388d; color: #fff; border: 1px solid #7346b3;
+            padding: 5px 15px; margin: 2px 5px; 
+            font-family: 'Teko'; font-size: 18px; font-weight: bold;
+            cursor: pointer;
         }
-        button:hover { background: #4b0082; color: #ffcc00; }
+        button:hover { background: #7346b3; }
+        
+        .grupo-controles {
+            display: flex; align-items: center; 
+            border-right: 1px solid #555; padding-right: 10px; margin-right: 10px;
+        }
+        .grupo-controles:last-child { border-right: none; }
+        .titulo-ctrl { font-size: 14px; color: #bbb; margin-right: 5px;}
     </style>
 </head>
 <body>
@@ -141,6 +148,7 @@
 <div id="contenedor-principal">
     <div class="header-tiempo">
         <div class="cronometro" id="timer">00:00</div>
+        <div class="tiempo-extra" id="extra-time"></div>
     </div>
 
     <div class="cuerpo-marcador">
@@ -162,40 +170,87 @@
     </div>
 
     <div id="controles">
-        <button onclick="goal('local', 1)">L +1</button>
-        <button onclick="goal('local', -1)">-</button>
-        <button onclick="startTimer()" style="color:#4eff4e">INICIAR</button>
-        <button onclick="pauseTimer()" style="color:#ff4e4e">PAUSA</button>
-        <button onclick="resetTimer()">RESET</button>
-        <button onclick="setHalfTime()">45:00</button>
-        <button onclick="goal('visitante', -1)">-</button>
-        <button onclick="goal('visitante', 1)">V +1</button>
+        <div class="grupo-controles">
+            <span class="titulo-ctrl">LOCAL:</span>
+            <button onclick="goal('local', 1)">+1</button>
+            <button onclick="goal('local', -1)">-1</button>
+        </div>
+
+        <div class="grupo-controles">
+            <button onclick="startTimer()">▶ INICIAR</button>
+            <button onclick="pauseTimer()">⏸ PAUSA</button>
+            <button onclick="resetTimer()">↺ RESET</button>
+            <button onclick="setSpecificTime(44, 55)">TEST 45'</button> <button onclick="setSpecificTime(89, 55)">TEST 90'</button>
+        </div>
+
+        <div class="grupo-controles">
+            <span class="titulo-ctrl">EXTRA:</span>
+            <button onclick="setExtra(1)">+1</button>
+            <button onclick="setExtra(2)">+2</button>
+            <button onclick="setExtra(3)">+3</button>
+            <button onclick="setExtra(4)">+4</button>
+            <button onclick="setExtra(5)">+5</button>
+            <button onclick="modExtra(1)">↑</button>
+            <button onclick="modExtra(-1)">↓</button>
+            <button onclick="clearExtra()">X</button>
+        </div>
+
+        <div class="grupo-controles">
+            <span class="titulo-ctrl">VISITA:</span>
+            <button onclick="goal('visitante', 1)">+1</button>
+            <button onclick="goal('visitante', -1)">-1</button>
+        </div>
     </div>
 </div>
 
 <script>
-    let seconds = 0;
+    // --- VARIABLES ---
+    let totalSeconds = 0;
     let timerInterval = null;
     let isRunning = false;
     let scoreL = 0;
     let scoreV = 0;
+    let extraMinutes = 0;
 
+    // --- ELEMENTOS DOM ---
     const displayTimer = document.getElementById('timer');
     const displayL = document.getElementById('score-local');
     const displayV = document.getElementById('score-visitante');
+    const displayExtra = document.getElementById('extra-time');
 
-    function formatTime(totalSeconds) {
-        const m = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
-        const s = (totalSeconds % 60).toString().padStart(2, '0');
-        return `${m}:${s}`;
+    // --- FUNCIONES DE UTILIDAD ---
+    
+    // Formatea segundos a MM:SS
+    function formatTime(sec) {
+        const m = Math.floor(sec / 60).toString().padStart(2, '0');
+        const s = (sec % 60).toString().padStart(2, '0');
+        return m + ":" + s;
     }
+
+    // Función genérica para animar un elemento (Efecto Salto)
+    function triggerAnimation(element) {
+        // Quitamos la clase por si ya la tiene para reiniciar la animación
+        element.classList.remove('animar-texto');
+        // Forzamos un 'reflow' para que el navegador se de cuenta del cambio
+        void element.offsetWidth; 
+        // Añadimos la clase que tiene el keyframe
+        element.classList.add('animar-texto');
+    }
+
+    // --- LÓGICA DEL CRONÓMETRO ---
 
     function startTimer() {
         if (!isRunning) {
             isRunning = true;
-            timerInterval = setInterval(() => {
-                seconds++;
-                displayTimer.innerText = formatTime(seconds);
+            timerInterval = setInterval(function() {
+                totalSeconds++;
+                displayTimer.innerText = formatTime(totalSeconds);
+
+                // ANIMACIÓN AL MINUTO 45:00 (2700 seg) Y 90:00 (5400 seg)
+                if (totalSeconds === 2700 || totalSeconds === 5400) {
+                    triggerAnimation(displayTimer);
+                }
+
             }, 1000);
         }
     }
@@ -207,36 +262,77 @@
 
     function resetTimer() {
         pauseTimer();
-        seconds = 0;
+        totalSeconds = 0;
         displayTimer.innerText = "00:00";
         scoreL = 0; scoreV = 0;
-        updateScores();
+        clearExtra(); // Borrar tiempo extra al resetear
+        updateScores(false); // False para no animar al resetear
     }
 
-    function setHalfTime() {
+    // Función extra para pruebas: pone el reloj donde quieras
+    function setSpecificTime(min, sec) {
         pauseTimer();
-        seconds = 45 * 60;
-        displayTimer.innerText = "45:00";
+        totalSeconds = (min * 60) + sec;
+        displayTimer.innerText = formatTime(totalSeconds);
     }
+
+    // --- LÓGICA DE GOLES ---
 
     function goal(team, amount) {
-        const el = team === 'local' ? displayL : displayV;
         if (team === 'local') {
+            let prev = scoreL;
             scoreL = Math.max(0, scoreL + amount);
+            // Solo animamos si el número cambió
+            if (prev !== scoreL) {
+                updateScores(true, 'local');
+            }
         } else {
+            let prev = scoreV;
             scoreV = Math.max(0, scoreV + amount);
+            if (prev !== scoreV) {
+                updateScores(true, 'visitante');
+            }
         }
-        if (amount > 0) {
-            el.classList.remove('score-up');
-            void el.offsetWidth;
-            el.classList.add('score-up');
-        }
-        updateScores();
     }
 
-    function updateScores() {
+    function updateScores(animate, team) {
         displayL.innerText = scoreL;
         displayV.innerText = scoreV;
+
+        if (animate) {
+            if (team === 'local') triggerAnimation(displayL);
+            if (team === 'visitante') triggerAnimation(displayV);
+        }
+    }
+
+    // --- LÓGICA TIEMPO DE DESCUENTO ---
+
+    function updateExtraDisplay() {
+        if (extraMinutes > 0) {
+            displayExtra.innerText = "+" + extraMinutes;
+            displayExtra.style.opacity = "1";
+        } else {
+            displayExtra.style.opacity = "0";
+        }
+    }
+
+    // Botones directos (+1, +2...)
+    function setExtra(min) {
+        extraMinutes = min;
+        updateExtraDisplay();
+        triggerAnimation(displayExtra); // Animación al poner descuento
+    }
+
+    // Botones incrementales (flechitas)
+    function modExtra(amount) {
+        extraMinutes = Math.max(0, extraMinutes + amount);
+        updateExtraDisplay();
+        triggerAnimation(displayExtra);
+    }
+
+    function clearExtra() {
+        extraMinutes = 0;
+        updateExtraDisplay();
     }
 </script>
 
